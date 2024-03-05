@@ -1,5 +1,4 @@
 # RedesSocialesySaludMental
 
 Integrantes:
-Fabian
-Estefania
+Fabian y Estefania
