@@ -1,6 +1,6 @@
 import dash
 from dash import dcc, html
-from dash.dependencies import Input, Output
+
 from dash import dash_table
 import plotly.express as px
 import pandas as pd
@@ -133,30 +133,32 @@ barras_usuarios_fig.update_layout(
 )
 barras_usuarios_div = dcc.Graph(figure=barras_usuarios_fig)
 
-#Gráfico de barras para la media de horas en redes sociales
-media_horas_rs = df.groupby('Género')['Tiempo total(h)'].mean().reset_index()
-barras_m_horas_fig = px.bar(media_horas_rs, x='Género', y='Tiempo total(h)', 
-                             labels={'y': 'Media de Horas'}, 
-                             title='Media de Horas en Redes Sociales')
-barras_m_horas_fig.update_layout(template='plotly_dark', 
-                                  plot_bgcolor='#21232C', 
-                                  paper_bgcolor='#21232C',
-                                  font_color='#FFFFFF')
-barras_horas_div = dcc.Graph(figure=barras_m_horas_fig)
-    
+#Gráfico de las horas de deporte a la semana relacionado al estrés
+deporte_estres_fig = px.scatter(df, x='Frecuencia deporte(sem)', y='Escala Estrés', title='Estrés por frecuencia de deporte')
+deporte_estres_fig.update_layout(
+    title='Estrés por frecuencia de deporte',
+    xaxis_title='Frecuencia deporte (sem)',
+    yaxis_title='Escala de Estrés',
+    plot_bgcolor='#21232C',
+    paper_bgcolor='#21232C',
+    font=dict(color='white')
+)
+deporte_estres_fig = dcc.Graph(figure=deporte_estres_fig)
 
 #Gráfico de histograma para el tiempo total en redes sociales
-total_instagram = df['instagram(h)'].sum()
-total_tiktok = df['TikTok(h)'].sum()
-total_twitter = df['Twitter(h)'].sum()
-total_youtube = df['Youtube(h)'].sum()
+total_instagram = df.groupby('Género')['instagram(h)'].sum().reset_index(name='Horas totales')
+total_instagram['Redes Sociales'] = 'Instagram'
+total_tiktok = df.groupby('Género')['TikTok(h)'].sum().reset_index(name='Horas totales')
+total_tiktok['Redes Sociales'] = 'TikTok'
+total_twitter = df.groupby('Género')['Twitter(h)'].sum().reset_index(name='Horas totales')
+total_twitter['Redes Sociales'] = 'Twitter'
+total_youtube = df.groupby('Género')['Youtube(h)'].sum().reset_index(name='Horas totales')
+total_youtube['Redes Sociales'] = 'YouTube'
 
-data_bar = {'Redes Sociales': ['Instagram', 'TikTok', 'Twitter', 'YouTube'],
-            'Horas totales': [total_instagram, total_tiktok, total_twitter, total_youtube]}
-df_t_rs = pd.DataFrame(data_bar)
-tiempo_total_fig = px.bar(df_t_rs, x='Redes Sociales', y='Horas totales', 
-             color='Redes Sociales', labels={'Horas totales': 'Horas totales de los encuestados'},
-             title='Total de las horas en redes sociales')
+df_t_rs = pd.concat([total_instagram, total_tiktok, total_twitter, total_youtube], ignore_index=True)
+
+tiempo_total_fig = px.bar(df_t_rs, x='Redes Sociales', y='Horas totales', labels={'Horas totales': 'Horas totales de los encuestados'},
+             title='Total de las horas en redes sociales', color= 'Género', barmode='stack')
 tiempo_total_fig.update_layout(template='plotly_dark', 
                                 plot_bgcolor='#21232C', 
                                 paper_bgcolor='#21232C',
@@ -165,7 +167,6 @@ tiempo_total_fig.update_layout(template='plotly_dark',
 tiempo_total_div = dcc.Graph(figure=tiempo_total_fig)
 
 #Gráfica de estado civil y Escala de depresión
-data_boxplot_estatus = [df['Escala Depresión'][df['Estado Civil'] == status] for status in df['Estado Civil'].unique()]
 estatus_depresion_fig = px.box(df, x='Estado Civil', y='Escala Depresión', points="all", title='Depresión por Estatus de Relación')
 estatus_depresion_fig.update_layout(
         title='Depresión con respecto al estado civil',
@@ -198,7 +199,7 @@ counts_comparation = df['Escala comparación'].value_counts().sort_index()
 bar_comparation = px.bar(x=counts_comparation.index, y=counts_comparation.values, 
                  category_orders={'x': [str(i) for i in range(11)]})
 bar_comparation.update_layout(
-        xaxis_title='Escala (0-10)',
+        xaxis_title='Escala de comparación (0-10)',
         yaxis_title='Conteo personas',
         plot_bgcolor='#21232C',
         paper_bgcolor='#21232C',
@@ -210,7 +211,7 @@ counts_sleep = df['Escala Sueño'].value_counts().sort_index()
 bar_sleep = px.bar(x=counts_sleep.index, y=counts_sleep.values, 
                  category_orders={'x': [str(i) for i in range(11)]})
 bar_sleep.update_layout(
-        xaxis_title='Escala (0-10)',
+        xaxis_title='Escala de Sueño (0-10)',
         yaxis_title='Conteo personas',
         plot_bgcolor='#21232C',
         paper_bgcolor='#21232C',
@@ -222,7 +223,7 @@ counts_depression = df['Escala Depresión'].value_counts().sort_index()
 bar_depression = px.bar(x=counts_depression.index, y=counts_depression.values, 
                  category_orders={'x': [str(i) for i in range(11)]})
 bar_depression.update_layout(
-        xaxis_title='Escala (0-10)',
+        xaxis_title='Escala de Depresión (0-10)',
         yaxis_title='Conteo personas',
         plot_bgcolor='#21232C',
         paper_bgcolor='#21232C',
@@ -234,7 +235,7 @@ counts_stress = df['Escala Estrés'].value_counts().sort_index()
 bar_stress = px.bar(x=counts_stress.index, y=counts_stress.values, 
                  category_orders={'x': [str(i) for i in range(11)]})
 bar_stress.update_layout(
-        xaxis_title='Escala (0-10)',
+        xaxis_title='Escala de Estrés (0-10)',
         yaxis_title='Conteo personas',
         plot_bgcolor='#21232C',
         paper_bgcolor='#21232C',
@@ -245,9 +246,9 @@ bar_stress.update_layout(
 app = dash.Dash(__name__)
 
 app.layout = html.Div([
-    html.H1('Dashboard de redes sociales', style={'textAlign': 'center', 'font-family': 'Baghdad', 'color': '#d4d4d4'}),
+    html.H1('Dashboard de variables de la salud con respecto a las redes sociales', style={'textAlign': 'center', 'font-family': 'Baghdad', 'color': '#d4d4d4'}),
     
-    # Primera fila
+    #Primera fila
     html.Div([
         html.Div([
             html.Div(get_info(df), style={'color': '#FFFFFF', 'height': '100%'})
@@ -274,7 +275,7 @@ app.layout = html.Div([
     # Tercera fila
     html.Div([
         html.Div([
-            barras_horas_div
+            deporte_estres_fig
         ], id='barras-m-horas-div', style={'flex': 1, 'backgroundColor': '#21232C', 'height': '500px', 'margin-right': '10px'}),
         html.Div([
             tiempo_total_div
@@ -286,7 +287,7 @@ app.layout = html.Div([
     
     #Cuarta fila
     html.Div([
-        html.H2('Percepción de variables de salud con respecto a las redes sociales', style={'textAlign': 'center', 'font-family': 'Baghdad', 'color': 'white'})
+        html.H2('Percepción de variables de salud', style={'textAlign': 'center', 'font-family': 'Baghdad', 'color': 'white'})
     ], style={'display': 'flex', 'justifyContent': 'center', 'backgroundColor': '#21232C'}),
         
     html.Div([
