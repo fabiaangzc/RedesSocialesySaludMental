@@ -251,11 +251,11 @@ app.layout = html.Div([
     html.Div([
         html.Div([
             html.Div(get_info(df), style={'color': '#FFFFFF', 'height': '100%'})
-        ], style={'flex': 1, 'backgroundColor': '#21232C', 'height': '550px', 'margin-right': '10px', 'margin-bottom': '10px'}),
+        ], style={'flex': 1, 'backgroundColor': '#21232C', 'height': '570px', 'margin-right': '10px', 'margin-bottom': '10px'}),
         
         html.Div([
             html.Div(get_describe(df), style={'color': '#FFFFFF', 'height': '100%'})
-        ], style={'flex': 1, 'backgroundColor': '#21232C', 'height': '550px'})
+        ], style={'flex': 1, 'backgroundColor': '#21232C', 'height': '570px'})
     ], style={'display': 'flex', 'alignItems': 'flex-start', 'margin-bottom': '10px'}),
     
     # Segunda fila
