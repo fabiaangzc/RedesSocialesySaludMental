@@ -263,13 +263,14 @@ app.layout = html.Div([
     html.Div([
         html.Div([
             box_fig
-        ], id='histograma-div', style={'flex': 1, 'backgroundColor': '#21232C', 'margin-right': '10px'}),
+        ], id='histograma-div', style={'flex': 1, 'backgroundColor': '#21232C', 'margin-right': '10px', 'height':'510px'}),
         html.Div([
             corr_div
-        ], id='correlacion-div', style={'flex': 1, 'backgroundColor': '#21232C', 'margin-right': '10px'}),
+        ], id='correlacion-div', style={'flex': 1, 'backgroundColor': '#21232C', 'margin-right': '10px', 'height':'510px'}),
         html.Div([
-            barras_usuarios_div
-        ], id='barras-usuarios-div', style={'flex': 1, 'backgroundColor': '#21232C'})
+            barras_usuarios_div, 
+            html.P('*de un estudio realizado con KEPIOS en 2024 de estatista.com', style={'textAlign': 'right', 'color': 'white', 'margin-right': '10px'})
+        ], id='barras-usuarios-div', style={'flex': 1, 'backgroundColor': '#21232C', 'height':'510px'})
     ], style={'display': 'flex', 'alignItems': 'flex-start', 'margin-bottom': '10px'}),
     
     # Tercera fila
