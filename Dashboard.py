@@ -91,7 +91,7 @@ def get_describe(df):
 
 numeric_df = df.select_dtypes(include=int)
 
-#Histograma
+#Boxplot
 box_fig = px.box(numeric_df, title='Distribución de las variables')
 box_fig.update_layout(
     template='plotly_dark',
