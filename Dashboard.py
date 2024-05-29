@@ -1,6 +1,5 @@
 import dash
 from dash import dcc, html
-
 from dash import dash_table
 import plotly.express as px
 import pandas as pd
@@ -19,7 +18,7 @@ df = df.rename(columns={'Edad': 'Edad', 'Género': 'Género', 'Estatus de relaci
                         'Frecuencia de deporte a la semana': 'Frecuencia deporte(sem)'})
 
 
-#Función para obtener df.info en un formato más legible
+#Función para obtener df.info
 def get_info(df):
     info_data = {
         'Variable': df.columns,
@@ -55,10 +54,10 @@ def get_info(df):
         html.P(f'Cantidad de datos: {num_data}', style={'color': '#FFFFFF'})
     ])
 
-#Función para obtener df.describe con nombres de columnas en español
+#Función para obtener df.describe
 def get_describe(df):
     description = df.describe().transpose()
-    description['std'] = description['std'].apply(lambda x: f"{x:.2f}")  # Formatear desviación estándar
+    description['std'] = description['std'].apply(lambda x: f"{x:.2f}")
     description.columns = ['Conteo', 'Promedio', 'Desviación estándar', 'Mínimo', '25%', 'Mediana', '75%', 'Máximo']
     description.reset_index(inplace=True)
     description.rename(columns={'index': 'Variable'}, inplace=True)
@@ -88,6 +87,7 @@ def get_describe(df):
         describe_table
     ])
 
+#Gráficas
 
 numeric_df = df.select_dtypes(include=int)
 
@@ -243,8 +243,10 @@ bar_stress.update_layout(
     )
 
 
+#Creación de app de Dash
 app = dash.Dash(__name__)
 
+#Diseño del Dashboard
 app.layout = html.Div([
     html.H1('Dashboard de variables de la salud con respecto a las redes sociales', style={'textAlign': 'center', 'font-family': 'Baghdad', 'color': '#d4d4d4'}),
     
@@ -262,13 +264,13 @@ app.layout = html.Div([
     # Segunda fila
     html.Div([
         html.Div([
-            box_fig
+            box_fig #Distribución de las variables
         ], id='histograma-div', style={'flex': 1, 'backgroundColor': '#21232C', 'margin-right': '10px', 'height':'510px'}),
         html.Div([
-            corr_div
+            corr_div #Gráfico de correlación
         ], id='correlacion-div', style={'flex': 1, 'backgroundColor': '#21232C', 'margin-right': '10px', 'height':'510px'}),
         html.Div([
-            barras_usuarios_div, 
+            barras_usuarios_div,  #Usuarios mundiales de redes sociales
             html.P('*de un estudio realizado con KEPIOS en 2024 de estatista.com', style={'textAlign': 'right', 'color': 'white', 'margin-right': '10px'})
         ], id='barras-usuarios-div', style={'flex': 1, 'backgroundColor': '#21232C', 'height':'510px'})
     ], style={'display': 'flex', 'alignItems': 'flex-start', 'margin-bottom': '10px'}),
@@ -276,13 +278,13 @@ app.layout = html.Div([
     # Tercera fila
     html.Div([
         html.Div([
-            deporte_estres_fig
+            deporte_estres_fig #Estrés vs deporte
         ], id='barras-m-horas-div', style={'flex': 1, 'backgroundColor': '#21232C', 'height': '500px', 'margin-right': '10px'}),
         html.Div([
-            tiempo_total_div
+            tiempo_total_div #Tiempo total por género y por red social
         ], id='tiempo-total-div', style={'flex': 1, 'backgroundColor': '#21232C', 'height': '500px', 'margin-right': '10px'}),
         html.Div([
-            estatus_depresion_fig
+            estatus_depresion_fig #Depresión vs Estado Civil
         ], id='estres-redes-div', style={'flex': 1, 'backgroundColor': '#21232C', 'height': '500px'})
     ], style={'display': 'flex', 'alignItems': 'flex-start', 'margin-bottom': '10px'}),
     
@@ -315,8 +317,6 @@ app.layout = html.Div([
         ], id='bar_stress', style={'backgroundColor': '#21232C', 'height': '500px', 'flex': 1}),
     ], style={'display': 'flex', 'alignItems': 'flex-start', 'margin-bottom': '10px'})
 ], style={'font-family': 'Baghdad', 'padding': '10px', 'background': '#282A35', 'height': '100vh', 'overflowY': 'scroll'})
-
-
 
 if __name__ == '__main__':
     app.run_server(debug=True)
